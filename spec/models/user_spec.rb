@@ -60,6 +60,11 @@ RSpec.describe User, type: :model do
         @user.password_confirmation = 'aaaaaa'
         @user.valid?
         expect(@user.errors.full_messages).to include('Password must be a mixture of letters and numbers.')
+
+        @user.password = 'あaaaa1'
+        @user.password_confirmation = 'あaaaa1'
+        @user.valid?
+        expect(@user.errors.full_messages).to include('Password must be a mixture of letters and numbers.')
       end
 
       it 'passwordとpassword_confirmationが不一致では登録できない' do
