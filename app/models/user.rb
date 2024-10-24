@@ -13,4 +13,5 @@ class User < ApplicationRecord
     validates :password,
               format: { with: /\A(?=.*?[a-z])(?=.*?\d)[a-z\d]+\z/i, message: 'must be a mixture of letters and numbers.' }
   end
+  has_many :items
 end
