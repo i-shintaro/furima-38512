@@ -27,27 +27,27 @@ RSpec.describe Item, type: :model do
       end
 
       it 'category_idが選択されてないと保存できない' do
-        @item.category_id = ''
+        @item.category_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Category can't be blank")
       end
       it 'condition_idが選択されてないと保存できない' do
-        @item.condition_id = ''
+        @item.condition_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Condition can't be blank")
       end
       it 'shipping_charge_idが選択されてないと保存できない' do
-        @item.shipping_charge_id = ''
+        @item.shipping_charge_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Shipping charge can't be blank")
       end
       it 'prefecture_idが選択されてないと保存できない' do
-        @item.prefecture_id = ''
+        @item.prefecture_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Prefecture can't be blank")
       end
       it 'shipping_day_idが選択されていないと保存ができない' do
-        @item.shipping_day_id = ''
+        @item.shipping_day_id = '1'
         @item.valid?
         expect(@item.errors.full_messages).to include("Shipping day can't be blank")
       end
@@ -56,6 +56,31 @@ RSpec.describe Item, type: :model do
         @item.valid?
         expect(@item.errors.full_messages).to include("Price can't be blank")
       end
+
+      it 'priceが300円未満では保存できない' do
+        @item.price = 299
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price must be greater than or equal to 300')
+      end
+
+      it 'priceが10,000,000円以上では保存できない' do
+        @item.price = 10_000_000
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price must be less than or equal to 9999999')
+      end
+
+      it 'priceが全角数字では保存できない' do
+        @item.price = '１００００'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not a number')
+      end
+
+      it 'priceが半角英数字混合では保存できない' do
+        @item.price = '100eee'
+        @item.valid?
+        expect(@item.errors.full_messages).to include('Price is not a number')
+      end
+
       it 'userが紐付いていないと保存できない' do
         @item.user = nil
         @item.valid?
