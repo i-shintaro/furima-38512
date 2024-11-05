@@ -244,10 +244,15 @@ a {
   justify-content: center;
 }
 
+.li{
+    list-style: none;
+}
+
 .item-lists>.list {
   width: 37vh;
   padding: 1vw;
   background-color: #FFF;
+  list-style: none;
 }
 
 
