@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :authenticate_user!, only: [:new]
+  before_action :set_item, only: [:show, :edit, :update]
   def index
     @items = Item.all.order('created_at DESC')
   end
@@ -18,15 +19,12 @@ class ItemsController < ApplicationController
   end
 
   def show
-    @item = Item.find(params[:id])
   end
 
   def edit
-    @item = Item.find(params[:id])
   end
 
   def update
-    @item = Item.find(params[:id])
     if @item.update(item_params)
       redirect_to root_path
     else
@@ -41,7 +39,7 @@ class ItemsController < ApplicationController
                                  :shipping_day_id, :image, :price).merge(user_id: current_user.id)
   end
 
-  def set_tweet
-    @tweet = Tweet.find(params[:id])
+  def set_item
+    @item = Item.find(params[:id])
   end
 end
