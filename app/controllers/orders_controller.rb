@@ -1,21 +1,20 @@
 class OrdersController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_item
   before_action :redirect_if_owner, only: [:index, :create]
   def index
-    gon.public_key = ENV['PAYJP_PUBLIC_KEY']
-    @item = Item.find(params[:item_id])
+    setup_gon_public_key
     @shippings_order = ShippingsOrder.new
   end
 
   def create
-    @item = Item.find(params[:item_id])
     @shippings_order = ShippingsOrder.new(order_params)
     if @shippings_order.valid?
       pay_item
       @shippings_order.save
       redirect_to root_path
     else
-      gon.public_key = ENV['PAYJP_PUBLIC_KEY']
+      setup_gon_public_key
       render :index, status: :unprocessable_entity
     end
   end
@@ -23,8 +22,8 @@ class OrdersController < ApplicationController
   private
 
   def order_params
-    params.require(:shippings_order).permit(:postal_code, :prefecture_id, :city, :street, :building_name,
-                                            :phone_number, :user_id).merge(item_id: @item.id, user_id: current_user.id, token: params[:token])
+    params.require(:shippings_order).permit(:postal_code, :prefecture_id, :city, :street, :building_name, :phone_number)
+          .merge(item_id: @item.id, user_id: current_user.id, token: params[:token])
   end
 
   def pay_item
@@ -37,9 +36,16 @@ class OrdersController < ApplicationController
   end
 
   def redirect_if_owner
-    @item = Item.find(params[:item_id])
     return unless @item.user_id == current_user.id
 
     redirect_to root_path
+  end
+
+  def set_item
+    @item = Item.find(params[:item_id])
+  end
+
+  def setup_gon_public_key
+    gon.public_key = ENV['PAYJP_PUBLIC_KEY']
   end
 end
