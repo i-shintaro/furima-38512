@@ -2,6 +2,7 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_item
   before_action :redirect_if_owner, only: [:index, :create]
+  before_action :redirect_if_purchased_or_not_owner, only: [:index]
   def index
     setup_gon_public_key
     @shippings_order = ShippingsOrder.new
@@ -47,5 +48,11 @@ class OrdersController < ApplicationController
 
   def setup_gon_public_key
     gon.public_key = ENV['PAYJP_PUBLIC_KEY']
+  end
+
+  def redirect_if_purchased_or_not_owner
+    return unless @item.order.present? || @item.user_id == current_user.id
+
+    redirect_to root_path
   end
 end
