@@ -19,6 +19,12 @@ RSpec.describe ShippingsOrder, type: :model do
     end
 
     context '商品が購入（保存）できない場合' do
+      it 'tokenが空では登録できないこと' do
+        @shippings_order.token = nil
+        @shippings_order.valid?
+        expect(@shippings_order.errors.full_messages).to include("Token can't be blank")
+      end
+
       it 'postal_codeが空だと保存できないこと' do
         @shippings_order.postal_code = ''
         @shippings_order.valid?
