@@ -1,4 +1,6 @@
 class OrdersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :redirect_if_owner, only: [:index, :create]
   def index
     gon.public_key = ENV['PAYJP_PUBLIC_KEY']
     @item = Item.find(params[:item_id])
@@ -32,5 +34,12 @@ class OrdersController < ApplicationController
       card: order_params[:token],
       currency: 'jpy'
     )
+  end
+
+  def redirect_if_owner
+    @item = Item.find(params[:item_id])
+    return unless @item.user_id == current_user.id
+
+    redirect_to root_path
   end
 end
