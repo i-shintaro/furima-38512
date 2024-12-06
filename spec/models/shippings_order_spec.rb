@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe ShippingsOrder, type: :model do
   before do
     user = FactoryBot.create(:user)
-    @shippings_order = FactoryBot.build(:shippings_order, user_id: user.id)
+    item = FactoryBot.create(:item, user:)
+    @shippings_order = FactoryBot.build(:shippings_order, user_id: user.id, item_id: item.id)
   end
 
   describe '購入機能保存' do
@@ -83,6 +84,18 @@ RSpec.describe ShippingsOrder, type: :model do
         @shippings_order.phone_number = '０９０１２３４５６７８'
         @shippings_order.valid?
         expect(@shippings_order.errors.full_messages).to include('Phone number must be between 10 to 11 digits')
+      end
+
+      it 'user_idが空だと保存できない' do
+        @shippings_order.user_id = nil
+        @shippings_order.valid?
+        expect(@shippings_order.errors.full_messages).to include("User can't be blank")
+      end
+
+      it 'item_idが空だと保存できない' do
+        @shippings_order.item_id = nil
+        @shippings_order.valid?
+        expect(@shippings_order.errors.full_messages).to include("Item can't be blank")
       end
     end
   end
