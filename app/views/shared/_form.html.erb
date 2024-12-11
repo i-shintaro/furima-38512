@@ -1,4 +1,4 @@
-<%= form_with(model: @item, local: true) do |f| %>
+<%= form_with(model: @item, local: true, id: 'new_item_form') do |f| %>
   <%= render 'shared/error_messages', model: @item %>
   
   <!-- 商品画像 -->
@@ -7,6 +7,7 @@
       商品画像
       <span class="indispensable">必須</span>
     </div>
+    <div id="previews"></div>
     <div class="click-upload">
       <p>クリックしてファイルをアップロード</p>
       <%= f.file_field :image, id: "item-image" %>
