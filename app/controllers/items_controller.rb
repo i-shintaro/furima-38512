@@ -13,6 +13,7 @@ class ItemsController < ApplicationController
   def create
     @item = Item.new(item_params)
     if @item.save
+      # rubyのsaveメソッドは内部的にエラーハンドリングがきいている
       redirect_to root_path
     else
       render :new, status: :unprocessable_entity

@@ -13,6 +13,7 @@ class OrdersController < ApplicationController
     if @shippings_order.valid?
       pay_item
       @shippings_order.save
+      # フォームオブジェクトを使って擬似的なモデルをつかってるので.saveにバリデーション判定がない
       redirect_to root_path
     else
       setup_gon_public_key
